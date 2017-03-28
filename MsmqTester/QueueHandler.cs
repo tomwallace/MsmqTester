@@ -4,19 +4,9 @@ using System.Messaging;
 
 namespace MsmqTester
 {
-    public class QueueHandler
+    public static class QueueHandler
     {
-        private readonly string _queueName;
-        private readonly string _msmqFullUri;
-
-        public QueueHandler()
-        {
-            _queueName = ConfigurationManager.AppSettings["queueName"];
-            string location = ConfigurationManager.AppSettings["msmqLocation"];
-            _msmqFullUri = $"{location}\\{_queueName}";
-        }
-
-        public void PostMessages(string[] commandSplit)
+        public static void PostMessages(string[] commandSplit)
         {
             int numberOfMessages = 1;
             if (commandSplit.Length > 1)
@@ -60,7 +50,7 @@ namespace MsmqTester
             CloseAndDispose(queue);
         }
 
-        public void RetrieveMessages(string[] commandSplit)
+        public static void RetrieveMessages(string[] commandSplit)
         {
             int messagesRetrieved = 0;
 
@@ -106,21 +96,29 @@ namespace MsmqTester
             CloseAndDispose(queue);
         }
 
-        private MessageQueue InitializeQueue()
+        private static MessageQueue InitializeQueue()
         {
-            Console.WriteLine($"Creating MSMQ queue instance for address {_msmqFullUri}");
+            string msmqFullUri = GetMsmqFullUri();
+            Console.WriteLine($"Creating MSMQ queue instance for address {msmqFullUri}");
 
-            return new MessageQueue(_msmqFullUri)
+            return new MessageQueue(msmqFullUri)
                 .IncludeArrivedTime()
                 .IncludeCorrelationId()
                 .IncludeLookupId()
                 .WithStringFormatter();
         }
 
-        private void CloseAndDispose(MessageQueue messageQueue)
+        private static void CloseAndDispose(MessageQueue messageQueue)
         {
             messageQueue.Close();
             messageQueue.Dispose();
+        }
+
+        private static string GetMsmqFullUri()
+        {
+            string queueName = ConfigurationManager.AppSettings["queueName"];
+            string location = ConfigurationManager.AppSettings["msmqLocation"];
+            return $"{location}\\{queueName}";
         }
     }
 }

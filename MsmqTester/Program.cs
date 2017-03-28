@@ -6,14 +6,10 @@ namespace MsmqTester
     {
         private static readonly string LINE_PREFIX = "MsmqTester:> ";
 
-        private static QueueHandler _queueHandler;
-
         private static int _messagesRetrieved;
 
         private static void Main(string[] args)
         {
-            _queueHandler = new QueueHandler();
-
             SettingsProvider.SetToDefault();
 
             string command;
@@ -47,12 +43,12 @@ namespace MsmqTester
 
                     case "/post":
                     case "/p":
-                        _queueHandler.PostMessages(commandSplit);
+                        QueueHandler.PostMessages(commandSplit);
                         break;
 
                     case "/retrieve":
                     case "/r":
-                        _queueHandler.RetrieveMessages(commandSplit);
+                        QueueHandler.RetrieveMessages(commandSplit);
                         break;
 
                     case "/settings":
