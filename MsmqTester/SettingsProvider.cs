@@ -5,6 +5,9 @@ namespace MsmqTester
 {
     public class SettingsProvider
     {
+        public static readonly string MESSAGE_NOT_RECOGNIZED =
+            "Command not recognized.  Type /help for more information.";
+
         // Message settings for tests
         private static bool _willPersist;
 
@@ -29,32 +32,7 @@ namespace MsmqTester
             return $"{messagePrefix}{messageSuffix}";
         }
 
-        public static void ProcessSetting(string[] commandSplit)
-        {
-            if (commandSplit.Length == 1)
-            {
-                ListCurrentSettings();
-                return;
-            }
-
-            switch (commandSplit[1])
-            {
-                case "length":
-                    HandleSettingLength(commandSplit[2]);
-                    break;
-
-                case "persist":
-                    HandleSettingWillPersist(commandSplit[2]);
-                    break;
-
-                default:
-                    Console.WriteLine(InformationProvider.MESSAGE_NOT_RECOGNIZED);
-                    Console.WriteLine("");
-                    break;
-            }
-        }
-
-        private static void ListCurrentSettings()
+        public static void ListCurrentSettings()
         {
             Console.WriteLine("Here are the current settings and their values:");
             Console.WriteLine($"Messages set to persist: {_willPersist}");
@@ -62,7 +40,7 @@ namespace MsmqTester
             Console.WriteLine("");
         }
 
-        private static void HandleSettingLength(string intAsString)
+        public static void HandleSettingLength(string intAsString)
         {
             int tryConvert;
             if (Int32.TryParse(intAsString, out tryConvert))
@@ -82,13 +60,7 @@ namespace MsmqTester
             IncorrectLength();
         }
 
-        private static void IncorrectLength()
-        {
-            Console.WriteLine("Message length must be between 10 and int max.  You failed to provide a number in this range.  Please try again.");
-            Console.WriteLine("");
-        }
-
-        private static void HandleSettingWillPersist(string boolAsString)
+        public static void HandleSettingWillPersist(string boolAsString)
         {
             if (boolAsString != "true" && boolAsString != "false")
             {
@@ -100,6 +72,12 @@ namespace MsmqTester
 
             _willPersist = Convert.ToBoolean(boolAsString);
             Console.WriteLine($"Message persistance set to: {boolAsString}");
+            Console.WriteLine("");
+        }
+
+        private static void IncorrectLength()
+        {
+            Console.WriteLine("Message length must be between 10 and int max.  You failed to provide a number in this range.  Please try again.");
             Console.WriteLine("");
         }
     }

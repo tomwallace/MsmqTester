@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Configuration;
 
-namespace MsmqTester
+namespace MsmqTester.Commands
 {
-    public class InformationProvider
+    public class HelpCommand : ICommand
     {
-        public static readonly string MESSAGE_NOT_RECOGNIZED =
-            "Command not recognized.  Type /help for more information.";
-
-        public static void HelpOutput()
+        public void Execute()
         {
             Console.WriteLine("The MSMQ Tester offers the following commands");
             Console.WriteLine("");
@@ -52,11 +48,9 @@ namespace MsmqTester
             Console.WriteLine("");
         }
 
-        public static void VersionNumber()
+        public bool HadErrorInCreation()
         {
-            string versionNumber = ConfigurationManager.AppSettings["version"];
-            Console.WriteLine($"MSMQ Tester version: {versionNumber}");
-            Console.WriteLine("");
+            return false;
         }
     }
 }
